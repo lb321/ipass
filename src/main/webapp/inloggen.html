@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Inloggen | KRIS</title>
+<link rel="stylesheet" type="text/css" href="style/navbar.css">
+</head>
+<body>
+	<ul>
+	  <li><a class="active" href="index.html">Home</a></li>
+	  <li><a href="inloggen.html">Inloggen</a></li>
+	</ul>
+	<form action="LoginServlet.do" method="post">
+		<a style="display: inline-block; width:100px;">Login naam:</a>
+		<input type="text" name="name" required>
+		<br/>
+		<a style="display: inline-block; width:100px;">Wachtwoord: </a>
+		<input type="password" name="pass" required>
+		<br/>
+		<input type="submit" value="login">
+		<br/>
+		<a id="messages"></a>
+	</form>
+</body>
+</html>

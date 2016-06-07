@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="js/iets.js"></script>
+<script src="https://code.jquery.com/jquery-2.2.3.js"></script>
+<script src="js/my_jquery_functions.js"></script>
+</head>
+<body>
+
+<canvas id="myCanvas" width="1000" height="725"
+style="border:1px solid #c3c3c3;">
+Your browser does not support the canvas element.
+</canvas>
+
+<script>
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+var x = "halloo";
+var hoeken = [];
+//			  x    y
+hoeken.push({x:570, y:640});
+hoeken.push({x:570, y:350});
+hoeken.push({x:570, y:65});
+hoeken.push({x:475, y:65});
+hoeken.push({x:375, y:65});
+hoeken.push({x:275, y:65});
+hoeken.push({x:175, y:65});
+hoeken.push({x:50, y:65});
+
+hoeken.push({x:675, y:640});
+hoeken.push({x:800, y:640});
+hoeken.push({x:935, y:640});
+hoeken.push({x:675, y:440});
+hoeken.push({x:800, y:440});
+hoeken.push({x:935, y:440});
+hoeken.push({x:675, y:260});
+hoeken.push({x:800, y:260});
+hoeken.push({x:935, y:260});
+hoeken.push({x:675, y:65});
+hoeken.push({x:800, y:65});
+hoeken.push({x:935, y:65});
+
+hoeken.push({x:675, y:350});
+hoeken.push({x:475, y:350});
+hoeken.push({x:375, y:350});
+hoeken.push({x:275, y:350});
+hoeken.push({x:175, y:350});
+hoeken.push({x:50, y:350});
+
+hoeken.push({x:50, y:640});
+hoeken.push({x:175, y:640});
+hoeken.push({x:275, y:640});
+hoeken.push({x:375, y:640});
+hoeken.push({x:475, y:640});
+for(var i in hoeken){
+	ctx.fillRect(hoeken[i].x, hoeken[i].y, 5, 5);
+}
+//ctx.fillStyle = "#FF0000";
+
+tekenPlattegrond(ctx);
+</script>
+<!-- 
+<script>
+	var canvas=document.getElementById("myCanvas"),
+	ctx = canvas.getContext("2d");
+	
+	//canvas.width = canvas.height = 500;
+	
+	var targetX = 280,
+	targetY = 360,
+	x = 625,
+	y = 700,
+	velX = 0,
+	velY = 0,
+	speed = 2, 
+	index = 1,
+	targetLijst = [],
+	l = {};
+	function getMousePos(evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+      x: evt.clientX - rect.left,
+      y: evt.clientY - rect.top
+    };
+	}
+	function getClosedHoekpunt(){
+		var lijst = [];//lijst met hoekpunten met eenzelfde coord als coord waar je naar toe moet
+		var gelijk = "";
+		//console.log(y + " x: " + x);
+		for(var i in hoeken){
+			var tempy = hoeken[i][1];
+			var tempx = hoeken[i][0];
+			if(y - tempy < 3  && y - tempy >= 0|| tempy - y < 3 && tempy - y >= 0){
+				lijst.push([tempx, tempy]);
+				gelijk = "y";
+			} else if(x - tempx < 3 && x - tempx >= 0 || tempx - x < 3 && tempx - x >= 0){
+				lijst.push([tempx, tempy]);
+				gelijk = "x";
+			}
+		}
+		var kleinste = [];
+		var vorigeverschil = 1000;
+		for(var i in lijst){
+			if(gelijk == "x"){//vergelijk y
+				var tempy = lijst[i][1];
+				if(Math.abs(tempy - y) < vorigeverschil){
+					kleinste.pop();
+					kleinste.push([lijst[i][0], tempy]);
+					vorigeverschil = Math.abs(tempy - y);
+				}
+			} else if(gelijk == "y"){//vergelijk x
+				var tempx = lijst[i][0];
+				//console.log(tempx +  " - " +  x + "= " + Math.abs(tempx - x));
+				if(Math.abs(tempx - x) < vorigeverschil){
+					kleinste.pop();
+					kleinste.push([tempx, lijst[i][1]]);
+					vorigeverschil = Math.abs(tempx - x);
+				}
+			}
+		}
+		return kleinste;
+	}
+	function getClosedToTarget(){
+		var lijst = [];//lijst met hoekpunten met eenzelfde coord als coord waar je naar toe moet
+		var gelijk = "";
+		//console.log(targetY + " x: " + x);
+		for(var i in hoeken){
+			var tempy = hoeken[i][1];
+			var tempx = hoeken[i][0];
+			if(targetY - tempy < 10  && targetY - tempy >= 0|| tempy - targetY < 10 && tempy - targetY >= 0){
+				lijst.push([tempx, tempy]);
+				gelijk = "y";
+			} else if(targetX - tempx < 10 && targetX - tempx >= 0 || tempx - targetX < 10 && tempx - targetX >= 0){
+				lijst.push([tempx, tempy]);
+				gelijk = "x";
+			}
+		}
+		var kleinste = [];
+		var vorigeverschil = 1000;
+		for(var i in lijst){
+			if(gelijk == "x"){//vergelijk y
+				var tempy = lijst[i][1];
+				if(Math.abs(tempy - targetY) < vorigeverschil){
+					kleinste.pop();
+					kleinste.push([lijst[i][0], tempy]);
+					vorigeverschil = Math.abs(tempy - targetY);
+				}
+			} else if(gelijk == "y"){//vergelijk x
+				var tempx = lijst[i][0];
+				//console.log(tempx +  " - " +  x + "= " + Math.abs(tempx - x));
+				if(Math.abs(tempx - targetX) < vorigeverschil){
+					kleinste.pop();
+					kleinste.push([tempx, lijst[i][1]]);
+					vorigeverschil = Math.abs(tempx - targetX);
+				}
+			}
+		}
+		console.log(kleinste);
+		return kleinste;
+	}
+	function getPuntOnderPunt(punt){
+		//console.log(punt[0]);
+		var yverschil = 1000;
+		var puntOnderPunt = [];
+		for(var i in hoeken){
+			var onderX = hoeken[i][0];
+			var onderY = hoeken[i][1];
+			var punty = punt[1];
+			var puntx = punt[0];
+			if(onderX == puntx){//als x aan elkaar gelijk zijn
+				//console.log(Math.abs(onderY - punty));
+				if(Math.abs(onderY - punty) < yverschil && onderY != punty){//bereken verschil y
+					puntOnderPunt.pop();
+					puntOnderPunt.push([onderX, onderY]);
+					yverschil = Math.abs(onderY -punty);
+				}
+			}
+		}
+		//console.log(punt[0][0]);
+	/*	for(var i in puntOnderPunt){
+			console.log("return: " + puntOnderPunt[i][0], puntOnderPunt[i][1]);
+		}*/
+		return puntOnderPunt;
+	}
+	function getPuntNaastPunt(punt, richting){
+		//console.log(punt);
+		var xverschil = 1000;
+		var puntNaastPunt = [];
+		for(var i in hoeken){
+			var onderX = hoeken[i][0];
+			var onderY = hoeken[i][1];
+			var punty = punt[1];
+			var puntx = punt[0];
+			if(onderY == punty){//als x aan elkaar gelijk zijn
+				if(richting == "links"){
+					
+				} else if(richting == "rechts"){
+					if(Math.abs(onderX - puntx) < xverschil && onderX != puntx && puntx - onderX< 0){//bereken verschil x
+						puntNaastPunt.pop();
+						puntNaastPunt.push([onderX, onderY]);
+						xverschil = Math.abs(onderX -puntx);
+					}
+				}
+			}
+		}
+		//console.log(punt[0][0]);
+		return puntNaastPunt;
+	}
+	function berekenPad(){
+	//	console.log(targetLijst.length);
+		var pad = false;
+		//console.log(getClosedToTarget()[0]);
+		var count = 0;
+		while(pad == false){
+		//	console.log(targetX + " x: " + x + " | " + targetY + " y: " + y);
+			if(targetLijst.length == 0){//onder y
+				console.log(1);
+				targetLijst.push(getClosedToTarget()[0]);
+			} else if(targetX < x && targetLijst[targetLijst.length -1][0] != x){
+				console.log(2 );
+				targetLijst.push( getPuntNaastPunt(targetLijst[targetLijst.length -1], "rechts")[0]);
+			} 
+		//	console.log(targetLijst, pad);
+			else if(targetY < y){
+				console.log(3);
+			//	console.log("hoi! "+ getPuntOnderPunt(targetLijst[targetLijst.length - 1]));
+				targetLijst.push(getPuntOnderPunt(targetLijst[targetLijst.length - 1])[0]);
+			}if(getClosedHoekpunt()[0][0] == targetLijst[targetLijst.length -1][0] && getClosedHoekpunt()[0][1] == targetLijst[targetLijst.length -1][1]){
+				pad = true;
+			}
+			console.log(getClosedHoekpunt()[0][1], targetLijst[targetLijst.length -1][1]);
+			count++;
+			
+		}
+		console.log(targetLijst, pad);
+
+	}
+	function update(){
+	var tx = targetX - x,
+	    ty = targetY - y,
+	    dist = Math.sqrt(tx*tx+ty*ty),
+	    rad = Math.atan2(ty,tx),
+	    angle = rad/Math.PI * 180;
+	
+	    velX = (tx/dist)*speed,
+	    velY = (ty/dist)*speed;
+	    //console.log(Math.round(y) + " x: " + Math.round(x));
+	
+	    x += velX;
+	    y += velY;
+	   
+	
+	  //  ctx.clearRect(0,0,500,500);
+		ctx.beginPath();
+	    ctx.arc(x,y,5,0,Math.PI*2);
+	    ctx.fill();
+		if(y - targetY < 1 && x - targetX < 1){
+			try{
+				targetY = targetLijst[targetLijst.length - index][1];
+				targetX = targetLijst[targetLijst.length - index][0];
+				index += 1;
+			} catch(error){
+				//getPuntNaastPunt(getPuntOnderPunt(getClosedHoekpunt()), "rechts");
+				
+			}
+		}
+		
+	setTimeout(update,10);
+	}
+	
+	//l[1] = [625, 350];
+	//l[2] = [250, 350];
+	l[1] = [200, 65];
+	berekenPad();
+	targetX = targetLijst[targetLijst.length - index][0];
+	targetY = targetLijst[targetLijst.length - index][1];
+	index +=1 ;
+
+	update();
+	
+	canvas.addEventListener("mousemove", function(e){
+		console.log(getMousePos(e));
+	});
+	/*targetX = 625;
+	targetY = 350;*/
+	
+//	move(l);
+	//targetX = 150;
+</script>
+ -->
+ 
+ <script>
+ function getMousePos(evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+      x: evt.clientX - rect.left,
+      y: evt.clientY - rect.top
+    };
+	}
+ canvas.addEventListener("mousemove", function(e){
+		console.log(getMousePos(e));
+	});
+ </script>
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Route | KRIS</title>
+<link rel="stylesheet" type="text/css" href="style/navbar.css">
+<script src="https://code.jquery.com/jquery-2.2.3.js"></script>
+<script src="js/iets.js"></script>
+<script src="js/my_jquery_functions.js"></script>
+</head>
+<body>
+<ul>
+  <li><a href="index.jsp">Home</a></li>
+  	<li><a class="active" href="#route.html">Route van klant</a></li>
+  	<li><a href="#drukte.html">Drukte per gangpad</a></li>
+  	<li class="dropdown"><a href="#producten.jsp">Producten</a>
+  		<div class="dropdown-content">
+  			<a href="producttoevoegen.html">Toevoegen</a>
+  			<a href="productverwijderen.html">Verwijderen</a>
+  		</div>
+  	</li>
+  	<li><a href="indelingveranderen.html">Indeling winkel aanpassen</a></li>
+	  	<form id="form" action="LogoutServlet.do" method="post">
+	 		<li><a href="javascript:{}"onclick="document.getElementById('form').submit();">Uitloggen</a></li>
+		</form>
+</ul>
+<script>
+$(document).ready(function(){
+	$.get("restservices/klanten", function(data){
+		$.each(data, function(i, klant){
+			$("#klantSelect").append("<option value=\"" + klant + "\">" + klant + "</option>");
+		})
+		$("#klantSelect").val(null);
+		$("#header").hide();
+	})
+	$("#klantSelect").change(function(){
+		 var str = "";
+	    $("#klantSelect option:selected").each(function() {
+	      str += $( this ).text() + " ";
+	    });
+	    $.get("restservices/klanten/bezoeken/"+str, function(data){
+	    	$("#table").html("<tr><th>Afrekentijd</th><th>Aantal gekochte producten</th><th></th></tr>");
+			$.each(data, function(i, bezoek){
+				$("#table").append("<tr><td>"+bezoek.afrekentijd+"</td><td style=\"margin: 0 0 0 50px;\">"+bezoek.aantalproducten+"</td><td><input type=\"button\" value=\"kies\" onclick=\"tekenRoute(" + bezoek.klantnummer + ", '" + bezoek.afrekentijd + "')\"/></td></tr>");
+			})
+			$("#header").show();
+	    })
+	})
+})
+</script>
+<script>
+var targetX = 280,
+targetY = 360,
+x = 800,
+y = 725,
+velX = 0,
+velY = 0,
+speed = 2, 
+index = 1,
+targetLijst = [],
+l = {};
+
+function tekenRoute(knummer, atijd){
+	 $.get("restservices/klanten/bezoeken/"+knummer, function(data){
+		 $.each(data, function(i, bezoek){
+			 if(bezoek.afrekentijd == atijd){
+				 for(var p in bezoek.gekochteproducten){
+					 tekenLijnNaar(berekenPositie(getSchap(bezoek.gekochteproducten[p].categorie)));
+				 }
+			 }
+		 })
+	 })
+	 //update();
+}
+function getSchap(categorie){
+	var schap = "";
+	$.ajax({
+	     async: false,
+	     type: 'GET',
+	     url: "restservices/producten/"+categorie,
+	     success: function(data) {
+	    	 schap = data[0].schap;
+	     }
+		});
+	return schap;
+}
+function berekenPositie(categorie){
+	switch(categorie){
+		case "s2":
+			return {
+				x: 775,
+				y: 525
+			};
+		case "s1":
+			return{
+				x: 825,
+				y: 525
+			};
+		case "s3":
+			return{
+				x: 775,
+				y: 350
+			};
+		case "s4":
+			return{
+				x: 825,
+				y: 350
+			};
+		case "s5":
+			return{
+				x: 775,
+				y: 175
+			};
+		case "s6":
+			return{
+				x: 825,
+				y: 175
+			};
+		case "s7":
+			return{
+				x: 650,
+				y: 525
+			};
+		case "s8":
+			return{
+				x: 650,
+				y: 200
+			};
+		case "s9":
+			return{
+				x: 600,
+				y: 500
+			};
+		case "s10":
+			return{
+				x: 600,
+				y: 200
+			};
+		case "s11":
+			return{
+				x: 550,
+				y: 500
+			};
+		case "s12":
+			return{
+				x: 550,
+				y: 200
+			};
+		case "s13":
+			return{
+				x: 500,
+				y: 500
+			};
+		case "s14":
+			return{
+				x: 500,
+				y: 200
+			};
+		case "s15":
+			return{
+				x: 450,
+				y: 500
+			};
+		case "s16":
+			return{
+				x: 450,
+				y: 200
+			};
+		case "s17":
+			return{
+				x: 400,
+				y: 500
+			};
+		case "s18":
+			return{
+				x: 400,
+				y: 200
+			};
+		case "s19":
+			return{
+				x: 350,
+				y: 500
+		};
+		case "s20":
+			return{
+				x: 350,
+				y: 200
+			};
+		case "s21":
+			return{
+				x: 300,
+				y: 500
+			};
+		case "s22":
+			return{
+				x: 300,
+				y: 200
+			};
+		case "s23":
+			return{
+				x: 250,
+				y: 500
+			};
+		case "s24":
+			return{
+				x: 250,
+				y: 200
+			};
+		case "s25":
+			return{
+				x: 200,
+				y: 500
+			};
+		case "s26":
+			return{
+				x: 200,
+				y: 200
+			};
+		case "s27":
+			return{
+				x: 145,
+				y: 500
+			};
+		case "s28":
+			return{
+				x: 150,
+				y: 200
+			};
+		case "s29":
+			return{
+				x: 75,
+				y: 500
+			};
+		case "s30":
+			return{
+				x: 100,
+				y: 200
+			};
+		case "s31":
+			return{
+				x: 975,
+				y: 525
+			};
+		case "s32":
+			return{
+				x: 975,
+				y: 250
+			};
+		case "s33":
+			return{
+				x: 800,
+				y: 25
+			};
+		case "s34":
+			return{
+				x: 435,
+				y: 25
+			};
+		case "s35":
+			return{
+				x: 175,
+				y: 25
+			};
+		case "s36":
+			return{
+				x: 25,
+				y: 200
+			};
+		case "s37":
+			return{
+				x: 25,
+				y: 525
+			};
+		return null;
+	}
+}
+</script>
+<h4 style="margin: 5px 0 5px 0;">Selecteer een klantnummer</h4>
+<select id="klantSelect">
+</select>
+<h4 style="margin: 10px 0 0 0;" id="header">Kies een bezoek</h4>
+<table id="table" style="margin: 10px 0 0 0;"></table>
+<canvas id="myCanvas" style="display:block;" width="1000" height="725"
+style="border:1px solid #c3c3c3;">
+	Your browser does not support the canvas element.
+</canvas>
+<script>
+	var canvas = document.getElementById("myCanvas");
+	var ctx = canvas.getContext("2d");
+	tekenPlattegrond(ctx);
+</script>
+</body>
+</html>

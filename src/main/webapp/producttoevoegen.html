@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Product Toevoegen | KRIS</title>
+<link rel="stylesheet" type="text/css" href="style/navbar.css">
+<script src="https://code.jquery.com/jquery-2.2.3.js"></script>
+</head>
+<body>
+<script>
+$(document).ready(function(){
+	$.get("restservices/producten/categorienamen", function(data){
+		$.each(data, function(i, naam){
+			$("#categorieSelector").append("<option value=\"" + naam + "\">" + naam + "</option>");
+		})
+	})
+})
+</script>
+<ul>
+  <li><a href="index.jsp">Home</a></li>
+  	<li><a href="#route.html">Route van klant</a></li>
+  	<li><a href="#drukte.html">Drukte per gangpad</a></li>
+  	<li class="dropdown"><a class="active" href="#producten.jsp">Producten</a>
+  		<div class="dropdown-content">
+  			<a href="producttoevoegen.html">Toevoegen</a>
+  			<a href="productverwijderen.html">Verwijderen</a>
+  		</div>
+  	</li>
+  	<li><a href="indelingveranderen.html">Indeling winkel aanpassen</a></li>
+	  	<form id="form" action="LogoutServlet.do" method="post">
+	 		<li><a href="javascript:{}"onclick="document.getElementById('form').submit();">Uitloggen</a></li>
+		</form>
+</ul>
+<form action="VoegProductToeServlet.do" method="post">
+	<p>Product naam</p>
+	<input type="text" name="naam" required/> 
+	<p>Prijs</p>
+	<input type="number" min="0" max="999" step="0.01" name="prijs" required/>
+	<p>Gewicht (gram)</p>
+	<input type="number" name="gewicht"/>
+	<p>Categorie</p>
+	<select id="categorieSelector" name="categorie">
+	</select>
+	<p></p>
+	<input type="submit" value="Toevoegen">
+</form>
+</body>
+</html>

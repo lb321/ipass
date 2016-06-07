@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Product Verwijderen | KRIS</title>
+<link rel="stylesheet" type="text/css" href="style/navbar.css">
+<script src="https://code.jquery.com/jquery-2.2.3.js"></script>
+</head>
+<body>
+<ul>
+  <li><a  href="index.jsp">Home</a></li>
+  	<li><a href="#route.html">Route van klant</a></li>
+  	<li><a href="#drukte.html">Drukte per gangpad</a></li>
+  	<li class="dropdown"><a class="active" href="#producten.jsp">Producten</a>
+  		<div class="dropdown-content">
+  			<a href="producttoevoegen.html">Toevoegen</a>
+  			<a href="productverwijderen.html">Verwijderen</a>
+  		</div>
+  	</li>
+  	<li><a href="indelingveranderen.html">Indeling winkel aanpassen</a></li>
+	  	<form id="form" action="LogoutServlet.do" method="post">
+	 		<li><a href="javascript:{}"onclick="document.getElementById('form').submit();">Uitloggen</a></li>
+		</form>
+</ul>
+<script>
+$(document).ready(function(){
+	$("#verwijderButton").hide();
+	$.get("restservices/producten/categorienamen", function(data){
+		$("#table").html("");
+		var index = 0;
+		var string = "";
+		$.each(data, function(i, naam){
+			if(index > 4){
+				string += "<td><input type=\"button\" style=\"width:146px;\" value=\"" + naam + "\" onclick=\"clickCategorie('"+ naam + "')\"></td></tr>";
+				index = 0;				
+			} else if (index == 0){
+				string += "<tr><td><input type=\"button\" style=\"width:146px;\" value=\"" + naam + "\" onclick=\"clickCategorie('"+ naam + "')\"></td>";
+				index += 1;
+			} else {
+				string += "<td><input type=\"button\" style=\"width:146px;\" value=\"" + naam + "\" onclick=\"clickCategorie('"+ naam + "')\"></td>";
+				index += 1;
+			}
+		})	
+		string += "</tr>";	
+		$("#table").append(string);
+	})
+})
+</script>
+<script>
+function clickCategorie(categorie){
+	$.get("restservices/producten/" + String(categorie),function(data){	
+		$("#table").html("");
+		$("#header").text("Selecteer de producten die u wilt verwijderen.")
+		$("#table").append("<tr><th></th><th>ID</th><th>Naam</th><th>Prijs</th><th>Gewicht</th><th>Categorie</th></tr>")
+		$.each(data, function(i, product){
+			$("#table").append("<tr><td><input type=\"checkbox\" name=\"" + product.id + "\" ></td><td>" + product.id + "</td><td>" + product.naam  + "</td><td>" + product.prijs + "</td><td>" + product.gewicht + "</td><td>" + product.categorie + "</td></tr>");
+		})
+		$("#verwijderButton").show();
+	})
+}
+</script>
+<h4 id="header" style="margin: 0 0 0 0;">Kies de categorie waaruit u een product wilt verwijderen</h4>
+<form action="VerwijderProductServlet.do" method="post">
+<table id="table">
+</table>
+<input type="submit" id="verwijderButton" value="Verwijder geslecteerde producten"/>
+</form>
+</body>
+</html>
